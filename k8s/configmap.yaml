@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fingrid-config
+  namespace: fingrid-dashboard
+data:
+  ENVIRONMENT: "production"
+  DEBUG: "false"
+  LOG_LEVEL: "INFO"
+  REDIS_URL: "redis://redis:6379"
+  CACHE_TTL: "300"
+  CORS_ORIGINS: '["https://energy-dashboard.example.com"]'
+  RATE_LIMIT_REQUESTS: "1000"
+  RATE_LIMIT_WINDOW: "60"
+  FINGRID_BASE_URL: "https://api.fingrid.fi/v1"
+  ENTSOE_BASE_URL: "https://web-api.tp.entsoe.eu/api"
