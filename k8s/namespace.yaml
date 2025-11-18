@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fingrid-dashboard
+  labels:
+    name: fingrid-dashboard
+    app: fingrid-dashboard
