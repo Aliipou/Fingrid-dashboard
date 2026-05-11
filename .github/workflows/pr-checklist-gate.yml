@@ -1,0 +1,33 @@
+name: PR Anti-Garbage Gate
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  checklist-gate:
+    name: Checklist Verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR description exists
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if [ -z "$PR_BODY" ] || [ ${#PR_BODY} -lt 50 ]; then
+            echo "❌ PR description is too short or empty."
+            echo "Fill out the PR template — explain what problem this solves and why this approach."
+            exit 1
+          fi
+          echo "✅ PR description present"
+
+      - name: Check required checkboxes are ticked
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          UNCHECKED=$(echo "$PR_BODY" | grep -c '^\- \[ \]' || true)
+          if [ "$UNCHECKED" -gt 0 ]; then
+            echo "❌ $UNCHECKED checklist item(s) not completed in the PR template."
+            echo "Complete all Anti-Garbage checklist items before merging."
+            exit 1
+          fi
+          echo "✅ All checklist items ticked"
