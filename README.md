@@ -53,3 +53,21 @@ All data from [Fingrid Open Data API](https://data.fingrid.fi/) — free to use 
 ## License
 
 MIT
+
+## Architecture
+
+```
+Fingrid-dashboard/
+├── backend/           # FastAPI service
+│   └── app/
+│       ├── api/       # Route handlers
+│       ├── services/  # Fingrid & ENTSO-E API clients, caching logic
+│       ├── models/    # Pydantic schemas
+│       └── core/      # Config, Redis client
+├── frontend/          # React + Vite SPA
+│   └── src/           # Components, hooks, charts
+├── k8s/               # Kubernetes manifests
+└── docker-compose.yml # Local dev stack
+```
+
+**Request flow:** React frontend polls the FastAPI backend every 60 seconds. The backend checks Redis for a cached response (TTL configurable); on a cache miss it fetches from the Fingrid and ENTSO-E REST APIs, caches the result, and returns it. This keeps the external API call rate well within free-tier limits.
